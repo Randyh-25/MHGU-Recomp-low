@@ -13,15 +13,15 @@ No game data is included. You need your own dump of MHGU 1.4.0.
 A controller is recommended. Plus + Minus opens the settings menu. Everything else works
 as in [upstream's README](https://github.com/morerokk/MHGURecomp#readme).
 
+# FAQ
+
+### Will you add touch controls?
+
+No. If you want that, request it upstream, as morerokk maintains an Android build, and they should build in this one if they are added. I'm not interested in supporting them myself. For phones, I recommend telescopic controllers.
+
 ## Credits and license
 
 All credit for MHGU Recomp goes to morerokk and its contributors. The iOS layer builds on
 [WiseManChris/MHGURecomp-iOS](https://github.com/WiseManChris/MHGURecomp-iOS),
 [Kamisorara/MHGURecomp-iOS](https://github.com/Kamisorara/MHGURecomp-iOS) and mhvuze's macOS port. MIT license, as
 upstream. LLM assistance was used to port and maintain the iOS build.
-
-# FAQ
-
-### Will you add touch controls?
-
-No. If you want that, request it upstream, as morerokk maintains an Android build, and they should build in this one if they are added. I'm not interested in supporting them myself. For phones, I recommend telescopic controllers.
