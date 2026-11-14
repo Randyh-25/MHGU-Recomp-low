@@ -17,7 +17,7 @@ as in [upstream's README](https://github.com/morerokk/MHGURecomp#readme).
 
 ### Will you add touch controls?
 
-No. If you want that, request it upstream, as morerokk maintains an Android build, and they should build in this one if they are added. I'm not interested in supporting them myself. For phones, I recommend telescopic controllers. Otherwise, any dinput or Switch controllers should work via direct USB connection on all iOS devices.
+No. If you want that, request it upstream, as morerokk maintains an Android build, and they should build in this one if they are added. I'm not interested in supporting them myself. For phones, I recommend telescopic controllers. Otherwise, any dinput or Switch controllers should work via direct USB connection on all iOS devices, others with Bluetooth. 
 
 ## Credits and license
 
