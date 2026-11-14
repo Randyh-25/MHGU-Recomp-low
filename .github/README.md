@@ -6,8 +6,6 @@ automatically. Also works on iPhone.
 
 No game data is included. You need your own dump of MHGU 1.4.0.
 
-## Install
-
 1. Get `MHGURecomp-iOS.<version>.ipa` from [Releases](https://github.com/cerroverb/MHGURecomp-iOS/releases).
 2. Sideload it with a tool such as [iloader](https://github.com/nab138/iloader).
 3. Start the app once, then put `exefs` and `romfs` in `MHGURecomp/data` with the Files app.
