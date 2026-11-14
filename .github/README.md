@@ -20,8 +20,8 @@ All credit for MHGU Recomp goes to morerokk and its contributors. The iOS layer 
 [Kamisorara/MHGURecomp-iOS](https://github.com/Kamisorara/MHGURecomp-iOS) and mhvuze's macOS port. MIT license, as
 upstream. LLM assistance was used to port and maintain the iOS build.
 
-### FAQ
+# FAQ
 
-# Will you add touch controls?
+### Will you add touch controls?
 
 No. If you want that, request it upstream, as morerokk maintains an Android build, and they should build in this one if they are added. I'm not interested in supporting them myself. For phones, I recommend telescopic controllers.
