@@ -30,7 +30,9 @@ GENFLAGS := -O1 -fno-strict-aliasing -ffp-contract=off -fno-math-errno -Wno-retu
             -Wno-parentheses-equality -Wno-unused-value -fvisibility=hidden -Iruntime $(GENARCH)
 
 GEN_SRC  := $(wildcard $(GEN)/main/*.c) $(wildcard $(GEN)/sdk/*.c)
-GEN_OBJ  := $(patsubst $(GEN)/%.c,$(O)/gen/%.o,$(GEN_SRC)) $(O)/gen/tools/gamelib_entry.o
+GEN_SRC_OBJ := $(patsubst $(GEN)/%.c,$(O)/gen/%.o,$(GEN_SRC))
+GEN_CACHE_OBJ := $(wildcard $(O)/gen/main/*.o) $(wildcard $(O)/gen/sdk/*.o)
+GEN_OBJ  := $(if $(strip $(GEN_SRC_OBJ)),$(GEN_SRC_OBJ),$(GEN_CACHE_OBJ)) $(O)/gen/tools/gamelib_entry.o
 RT_SRC   := $(wildcard runtime/*.c) $(wildcard runtime/hle/*.c) $(wildcard runtime/services/*.c) $(wildcard runtime/net/*.c) \
             runtime/nvn/objects.c runtime/nvn/cmdbuf.c runtime/nvn/nvn_args.c runtime/nvn/tegra.c runtime/nvn/formats.c \
             runtime/nvn/backend_null.c runtime/nvn/astc.c runtime/nvn/bcn.c runtime/nvn/maxwell/translate.c $(wildcard runtime/nvn/vulkan/*.c) \
