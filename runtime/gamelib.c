@@ -14,7 +14,7 @@
 
 static const GameLibTables *g_tables;
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(MHGU_STATIC_GAMELIB)
 extern const GameLibTables *mhgugame_tables(void)
     __attribute__((weak_import));  // (STATIC_GAMELIB: linked into the executable)
 #endif
@@ -63,7 +63,7 @@ static void check_cpu(const char *path, const uint32_t *needs) {
 
 bool gamelib_load(char *why, size_t why_size) {
     if (g_tables) return true;
-#ifdef __APPLE__
+#if defined(__APPLE__) && defined(MHGU_STATIC_GAMELIB)
     if (mhgugame_tables) {
         const GameLibTables *t = mhgugame_tables();
         if (t && t->abi == GAMELIB_ABI && t->id && !strcmp(t->id, GAMELIB_ID)) {

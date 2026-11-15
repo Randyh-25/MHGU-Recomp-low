@@ -168,6 +168,11 @@ OSFLAGS  :=
 LIB_INC  := -I$(DEPS)/include -I$(ZSTD_DIR)/include
 EXE      := $(B)/MHGURecomp
 STATIC_GAMELIB ?= 1
+ifneq ($(filter 1,$(STATIC_GAMELIB)),)
+ifneq ($(strip $(GEN_CODE_OBJ)),)
+RTFLAGS += -DMHGU_STATIC_GAMELIB
+endif
+endif
 FRAMEWORKS := -framework UIKit -framework Metal -framework QuartzCore -framework Foundation \
               -framework CoreGraphics -framework AudioToolbox -framework CoreAudio \
               -framework GameController -framework CoreHaptics -framework IOKit \
