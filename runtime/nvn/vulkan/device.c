@@ -80,9 +80,11 @@ static void disable_overwolf_layers(void) {
     for (size_t i = 0; i < sizeof vars / sizeof *vars; i++)
         if (!getenv(vars[i])) SDL_setenv_unsafe(vars[i], "1", 0);
 #ifdef __APPLE__
-    // Disable Metal residency sets in MoltenVK to ensure rock-solid stability on iOS 18 / Apple Silicon M2
+    // MoltenVK/iOS stability and compatibility tweaks (older devices/drivers can be sensitive here).
     if (!getenv("MVK_CONFIG_RESIDENCY_SETS")) SDL_setenv_unsafe("MVK_CONFIG_RESIDENCY_SETS", "0", 0);
     if (!getenv("MVK_CONFIG_USE_MTLRESIDENCYSETS")) SDL_setenv_unsafe("MVK_CONFIG_USE_MTLRESIDENCYSETS", "0", 0);
+    if (!getenv("MVK_CONFIG_FULL_IMAGE_VIEW_SWIZZLE")) SDL_setenv_unsafe("MVK_CONFIG_FULL_IMAGE_VIEW_SWIZZLE", "1", 0);
+    if (!getenv("MVK_CONFIG_SYNCHRONOUS_QUEUE_SUBMITS")) SDL_setenv_unsafe("MVK_CONFIG_SYNCHRONOUS_QUEUE_SUBMITS", "1", 0);
 #endif
 }
 

@@ -64,28 +64,48 @@ uintptr_t g_guest_base = 0;
 bool plat_reserve_guest(uint64_t base, uint64_t size) {
     void *p = MAP_FAILED;
 
-    // 1. If a fixed base was specified, try it first
+    // 1. If a fixed base was specified, try it first (non-iOS builds may rely on a fixed mapping).
+#ifndef __APPLE__
     if (base != 0) {
         p = mmap((void *)(uintptr_t)base, size, PROT_NONE,
                  MAP_PRIVATE | MAP_ANON | MAP_FIXED, -1, 0);
         if (p == (void *)(uintptr_t)base) {
-            fprintf(stderr, "[plat] Successfully reserved 4 GB guest space at fixed address %p\n", p);
+            fprintf(stderr, "[plat] Successfully reserved guest space at fixed address %p\n", p);
         } else {
             p = MAP_FAILED;
         }
     }
+#else
+    (void)base;
+#endif
 
-    // 2. If fixed base was not specified or failed (e.g. unprivileged iOS virtual address limits),
-    // let the kernel allocate 4 GB anywhere in the process!
+    // 2. Let the kernel choose an address. This reserves virtual address space only (not physical RAM).
     if (p == MAP_FAILED) {
         p = mmap(NULL, size, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
         if (p != MAP_FAILED) {
-            fprintf(stderr, "[plat] Successfully dynamically reserved 4 GB guest space at %p\n", p);
+            fprintf(stderr, "[plat] Successfully reserved guest space (%llu MB) at %p\n",
+                    (unsigned long long)(size / (1024ull * 1024ull)), p);
         }
     }
 
+#ifdef __APPLE__
+    // 3. iOS fallback: try reserving the used 32-bit guest range instead of the full 4 GB span.
+    //    The runtime's mapped regions currently stay below 0xF8100000, so this can succeed where a
+    //    contiguous 4 GB reservation fails, while keeping guest addresses/offsets valid.
+    if (p == MAP_FAILED && size > 0xF8100000ull) {
+        uint64_t smaller = 0xFC000000ull;  // covers guest regions with slack, page-aligned
+        p = mmap(NULL, smaller, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
+        if (p != MAP_FAILED) {
+            size = smaller;
+            fprintf(stderr, "[plat] Reserved reduced guest space (%llu MB) at %p\n",
+                    (unsigned long long)(size / (1024ull * 1024ull)), p);
+        }
+    }
+#endif
+
     if (p == MAP_FAILED) {
-        fprintf(stderr, "[plat] FATAL: failed to reserve 4 GB virtual guest space: %s (errno %d)\n", strerror(errno), errno);
+        fprintf(stderr, "[plat] FATAL: failed to reserve guest virtual address space (%llu MB): %s (errno %d)\n",
+                (unsigned long long)(size / (1024ull * 1024ull)), strerror(errno), errno);
         return false;
     }
 
