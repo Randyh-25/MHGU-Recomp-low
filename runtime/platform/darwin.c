@@ -32,6 +32,11 @@
 static uint64_t g_lo, g_hi;
 #define COMMIT_CHUNK 0x10000ull
 #define MAX_CHUNKS ((0x100000000ull + COMMIT_CHUNK - 1) / COMMIT_CHUNK)
+#ifdef __APPLE__
+// The recompiled game only uses addresses below PLUGIN2_END. Avoid reserving the
+// unused top of the 32-bit guest range on devices with tighter VA limits.
+#define IOS_GUEST_RESERVATION 0xF8100000ull
+#endif
 
 enum { CHUNK_FREE = 0, CHUNK_BUSY, CHUNK_READY };
 static _Atomic unsigned char g_chunk[MAX_CHUNKS];
@@ -89,11 +94,10 @@ bool plat_reserve_guest(uint64_t base, uint64_t size) {
     }
 
 #ifdef __APPLE__
-    // 3. iOS fallback: try reserving the used 32-bit guest range instead of the full 4 GB span.
-    //    The runtime's mapped regions currently stay below 0xF8100000, so this can succeed where a
-    //    contiguous 4 GB reservation fails, while keeping guest addresses/offsets valid.
-    if (p == MAP_FAILED && size > 0xF8100000ull) {
-        uint64_t smaller = 0xFC000000ull;  // covers guest regions with slack, page-aligned
+    // 3. iOS fallback: reserve only the range used by the game. This is important
+    //    on older devices such as iPhone X, where a full 4 GB reservation can fail.
+    if (p == MAP_FAILED && size > IOS_GUEST_RESERVATION) {
+        uint64_t smaller = IOS_GUEST_RESERVATION;
         p = mmap(NULL, smaller, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
         if (p != MAP_FAILED) {
             size = smaller;
