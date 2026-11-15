@@ -15,7 +15,8 @@
 static const GameLibTables *g_tables;
 
 #ifdef __APPLE__
-extern const GameLibTables *mhgugame_tables(void) __attribute__((weak));  // (STATIC_GAMELIB: linked into the executable)
+extern const GameLibTables *mhgugame_tables(void)
+    __attribute__((weak_import));  // (STATIC_GAMELIB: linked into the executable)
 #endif
 
 // Can this CPU run the game code? (needs: the library's GAMELIB_CPU_NEEDS bits.) If not, the player is told so, not
